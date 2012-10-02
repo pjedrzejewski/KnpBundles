@@ -54,7 +54,9 @@
             </article>
             {%- endfor %}
 
-            {{ pagerfanta(paginator, 'knp_bundles_view') }}
+            {% if paginator.haveToPaginate() %}
+                {{ pagerfanta(paginator, 'knp_bundles_view') }}
+            {% endif %}
         </section>
     </div>
 </div>

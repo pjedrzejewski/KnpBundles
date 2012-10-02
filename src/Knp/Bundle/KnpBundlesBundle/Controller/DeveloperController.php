@@ -62,10 +62,12 @@ class DeveloperController extends BaseController
         $this->highlightMenu('developers');
 
         $query = $this->getRepository('Developer')->queryAllWithBundlesSortedBy($sortField);
-        $developers = $this->getPaginator($query, $request->query->get('page', 1), 18);
+        $paginator = $this->getPaginator($query, $request->query->get('page', 1), 18);
+        $developers = $paginator->getCurrentPageResults();
 
         return $this->render('KnpBundlesBundle:Developer:list.'.$format.'.twig', array(
-            'developers'       => $developers,
+            'developers'  => $developers,
+            'paginator'   => $paginator,
             'sort'        => $sort,
             'sortLegends' => $this->sortLegends,
             'callback'    => $request->query->get('callback')
