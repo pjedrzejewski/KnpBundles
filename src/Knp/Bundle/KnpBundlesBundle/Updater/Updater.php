@@ -16,6 +16,7 @@ use Knp\Bundle\KnpBundlesBundle\Entity\Bundle;
 use Knp\Bundle\KnpBundlesBundle\Entity\OwnerManager;
 use Knp\Bundle\KnpBundlesBundle\Finder\FinderInterface;
 use Knp\Bundle\KnpBundlesBundle\Github\Repo;
+use Knp\Bundle\KnpBundlesBundle\Notifier\Notifier;
 
 class Updater
 {
@@ -49,6 +50,11 @@ class Updater
     private $bundleUpdateProducer;
 
     /**
+     * @var Notifier
+     */
+    private $notifier;
+
+    /**
      * @param \Doctrine\ORM\EntityManager  $em
      * @param OwnerManager                 $ownerManager
      * @param FinderInterface              $finder
@@ -71,6 +77,11 @@ class Updater
     public function setBundleUpdateProducer(Producer $bundleUpdateProducer)
     {
         $this->bundleUpdateProducer = $bundleUpdateProducer;
+    }
+
+    public function setNotifier(Notifier $notifier)
+    {
+        $this->notifier = $notifier;
     }
 
     public function setUp()
@@ -128,6 +139,10 @@ class Updater
                 $this->bundles[strtolower($bundle->getFullName())] = $bundle;
 
                 $this->githubRepoApi->updateFiles($bundle);
+
+                if (null === $bundle->getId()) {
+                    $this->notifier->notifyOwnerAboutDiscovery($bundle);
+                }
 
                 $this->em->persist($bundle);
                 $this->em->flush();
