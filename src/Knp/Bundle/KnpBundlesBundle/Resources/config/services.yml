@@ -26,6 +26,7 @@ parameters:
     knp_bundles.scoring.readme.class: Knp\Bundle\KnpBundlesBundle\EventListener\Scoring\ReadmeListener
     knp_bundles.scoring.travis.class: Knp\Bundle\KnpBundlesBundle\EventListener\Scoring\TravisListener
     knp_bundles.utils.solr.class: Knp\Bundle\KnpBundlesBundle\Utils\SolrUtils
+    knp_bundles.notifier.class: Knp\Bundle\KnpBundlesBundle\Notifier\SolrUtils
     knp_bundles.twitter.parameters:
         consumer_key: %knp_bundles.twitter.consumer_key%
         consumer_secret: %knp_bundles.twitter.consumer_secret%
@@ -40,6 +41,7 @@ services:
             - @knp_bundles.owner.manager
             - @knp_bundles.finder
             - @knp_bundles.github_repository_api
+            - @knp_bundles.notifier
 
     knp_bundles.owner.manager:
         class: %knp_bundles.owner.manager.class%
@@ -189,6 +191,12 @@ services:
         arguments:
             - @solarium.client
             - @kernel
+
+    knp_bundles.notifier:
+        class: %knp_bundles.notifier.class%
+        arguments:
+            - @mailer
+            - @templating
 
     knp_bundles.pagerfanta_view:
         class: Pagerfanta\View\OptionableView

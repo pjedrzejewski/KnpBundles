@@ -59,14 +59,16 @@ class Updater
      * @param OwnerManager                 $ownerManager
      * @param FinderInterface              $finder
      * @param Repo                         $githubRepoApi
+     * @param Notifier                     $notifier
      */
-    public function __construct(EntityManager $em, OwnerManager $ownerManager, FinderInterface $finder, Repo $githubRepoApi)
+    public function __construct(EntityManager $em, OwnerManager $ownerManager, FinderInterface $finder, Repo $githubRepoApi, Notifier $notifier)
     {
         $this->em = $em;
         $this->finder = $finder;
         $this->githubRepoApi = $githubRepoApi;
         $this->ownerManager = $ownerManager;
         $this->output = new NullOutput();
+        $this->notifier = $notifier;
     }
 
     public function setOutput(OutputInterface $output)
@@ -77,11 +79,6 @@ class Updater
     public function setBundleUpdateProducer(Producer $bundleUpdateProducer)
     {
         $this->bundleUpdateProducer = $bundleUpdateProducer;
-    }
-
-    public function setNotifier(Notifier $notifier)
-    {
-        $this->notifier = $notifier;
     }
 
     public function setUp()
